@@ -1,11 +1,16 @@
+from django.views.generic import ListView, DetailView
+from .models import Post
 
-from django.views.generic import ListView
-from .models import *
+
 # Create your views here.
 
-class PostList(ListView):
-    model = Post
-    ordering = 'time_create'
-    template_name = 'news_page.html'
-    context_object_name = 'news_page'
 
+class PostList(ListView):
+    queryset = Post.objects.all().order_by('-time_create')
+    template_name = 'news.html'
+    context_object_name = 'posts'
+
+class PostDetail(DetailView):
+    model = Post
+    template_name = 'news_detail.html'
+    context_object_name = 'post_detail'

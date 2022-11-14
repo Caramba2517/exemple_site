@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -58,15 +59,12 @@ class Post(models.Model):
         return self.content
 
     def __str__(self):
-        return f'{self.headline}{self.post_rate}{self.status}{self.categories}{self.content}{self.time_create}{self.author_post} '
+        return f'{self.content}'
 
 
 class PostCategory(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'{self.post}{self.category}'
 
 
 class Comment(models.Model):
@@ -83,6 +81,3 @@ class Comment(models.Model):
     def dislike(self, amount=1):
         self.comment_rate -= amount
         self.save()
-
-    def __str__(self):
-        return f'{self.post_com}{self.comment_rate}{self.content}{self.time_create}{self.comment_aut}'
