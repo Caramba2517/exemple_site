@@ -1,10 +1,13 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Author, Category
+from .models import Post, Author, Category, BaseRegisterForm
 from .filters import PostFilter
 from datetime import datetime
 from .forms import PostForm
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import User
 
 
 # Create your views here.
@@ -39,26 +42,23 @@ class PostDetail(DetailView):
     context_object_name = 'post_detail'
 
 
-class PostUpdate(UpdateView):
+class PostUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news_edit')
     form_class = PostForm
     model = Post
     template_name = 'news_edit.html'
 
 
-class PostDelete(DeleteView):
+class PostDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news_delete')
     model = Post
     template_name = 'news_delete.html'
     success_url = reverse_lazy('posts')
 
 
-def create_news(request):
-    form = PostForm()
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/news/')
-
-    return render(request, 'news_edit.html', {'form': form})
-
+class PostCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('news_edit')
+    form_class = PostForm
+    model = Post
+    template_name = 'news_edit.html'
 
