@@ -34,9 +34,12 @@ class Author(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
+    subscribers = models.ManyToManyField(User, max_length=200, blank=True)
 
     def __str__(self):
         return f'{self.name}'
+
+
 
 
 class Post(models.Model):
@@ -66,6 +69,7 @@ class Post(models.Model):
     def get_absolute_url(self):
         return f'/news/{self.id}'
 
+
 class PostCategory(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -88,9 +92,9 @@ class Comment(models.Model):
 
 
 class BaseRegisterForm(UserCreationForm):
-    email = forms.EmailField(label = "Email")
-    first_name = forms.CharField(label = "Имя")
-    last_name = forms.CharField(label = "Фамилия")
+    email = forms.EmailField(label="Email")
+    first_name = forms.CharField(label="Имя")
+    last_name = forms.CharField(label="Фамилия")
 
     class Meta:
         model = User
@@ -99,5 +103,4 @@ class BaseRegisterForm(UserCreationForm):
                   "last_name",
                   "email",
                   "password1",
-                  "password2", )
-
+                  "password2",)
