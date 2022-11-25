@@ -1,74 +1,69 @@
 {% extends 'flatpages/default.html' %}
-
-{% block title %}
-News
-{% endblock title %}
-
+{% block content %}
 {% load custom_filters %}
 {% load custom_tags %}
-
-{% block content %}
-    <h1>Все новости:</h1>
-   {# Добавляем форму, которая объединяет набор полей, которые будут отправляться в запросе #}
-<form action="" method="get">
-       {# Переменная, которую мы передали через контекст, может сгенерировать нам форму с полями #}
-    {{ filterset.form.as_p }}
-       {# Добавим кнопку отправки данных формы #}
-    <input type="submit" value="Найти" />
-</form>
+<body>
+<div class="name">
+    <h3>Все новости</h3>
+</div>
 
 
-
-
-   <hr>
-   {% if posts %}
-       <table>
-           <tr>
-               <td>Заголовок</td>
-               <td>Дата публикации:</td>
-               <td>Контент</td>
-
-           </tr>
-
-           {% for post in posts%}
-           <tr>
-               <td>{{ post.headline|Censor }}</td>
-               <td>{{ post.time_create|date:'d.m.Y' }}</td>
-               <td>{{ post.content|truncatewords:20|Censor }}</td>
-
-
-           </tr>
-           {% endfor %}
-
-       </table>
-   {% else %}
-       <h2>Новостей нет!</h2>
-   {% endif %}
-
-
-
-{# Информация о предыдущих страницах #}
-{% if page_obj.has_previous %}
-    <a href="?{% url_replace page=1 %}">1</a>
-    {% if page_obj.previous_page_number != 1 %}
-           ...
-        <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
-    {% endif %}
+    <hr>
+</div>
+{% if posts %}
+    {% for post in posts%}
+        <div class="post-wrap">
+            <div class="post-item">
+                <div class="post-item-wrap">
+                    <a href="/news/{{post.get_absolute_url}}" class="post-link">
+                        <h3 class="post-title">{{ post.headline|Censor }}</h3>
+                        <p class="post-content">{{ post.content|truncatewords:20|Censor }}</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <h2>Новостей нет!</h2>
 {% endif %}
 
-{# Информация о текущей странице #}
-{{ page_obj.number }}
-
-{# Информация о следующих страницах #}
-{% if page_obj.has_next %}
-<a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
-    {% if paginator.num_pages != page_obj.next_page_number %}
-           ...
-    <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+<div class="paginator">
+    {% if page_obj.has_previous %}
+        <a href="?{% url_replace page=1 %}">1</a>
+        {% if page_obj.previous_page_number != 1 %}
+            ...
+            <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+        {% endif %}
     {% endif %}
-{% endif %}
 
 
+    {{ page_obj.number }}
 
+
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+        {% if paginator.num_pages != page_obj.next_page_number %}
+            ...
+        <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+        {% endif %}
+    {% endif %}
+    <hr>
+</div>
+<div class="list-box">
+  <input type="checkbox" hidden id="some-id" />
+  <label for="some-id"><span>Поиск</span><span>Скрыть</span></label>
+  <ul>
+     <h5>Поиск новостей:</h5>
+        <form action="" method="get">
+
+        {{ filterset.form.as_p }}
+
+        <input type="submit" value="Найти" />
+        </form>
+  </ul>
+</div>
+
+
+</body>
 
 {% endblock content %}

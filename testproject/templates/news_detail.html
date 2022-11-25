@@ -12,7 +12,7 @@ News Detail
 <hr>
 <h2>{{ post_detail.content|Censor}}</h2>
 <p>Автор - {{ post_detail.author_post }}</p>
-<p>Категория - {{ post_detail.categories }}</p>
+<p>Категория - {{ post_detail.categories.all }}</p>
 <p>Рейтинг - {{ post_detail.post_rate }}</p>
 <p>Дата загрузки - {{ post_detail.time_create|date:'d.m.Y'}}</p>
 
